@@ -8,4 +8,5 @@
     <color name="endblue">#0bcce6</color>
     <color name="startred">#F44C4C</color>
     <color name="black">#000000</color>
+    <color name="startwhite">#FFFFFF</color>
 </resources>
