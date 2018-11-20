@@ -6,36 +6,66 @@
     android:orientation="horizontal"
     android:gravity="center"
     >
-    <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:id="@+id/logo-p"
-        android:src="@drawable/ic_launcher_background"
-        />
-    <LinearLayout
+    <android.support.v7.widget.CardView
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-        <TextView
-            android:id="@+id/title"
-            android:text="Title"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:layout_marginLeft="15dp"
+        android:layout_margin="10dp"
+        card_view:cardCornerRadius="5dp">
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        <TextView
-            android:id="@+id/subtext"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:textSize="15sp"
-            android:textStyle="normal"
-            android:text="Description"/>
-    </LinearLayout>
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/title"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:layout_gravity="center_horizontal"
+                android:textSize="20dp"
+                android:text="L'IA au service des banques"/>
+            <TextView
+                android:id="@+id/content"
+                android:layout_margin="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="normal"
+                android:textSize="15dp"
+                android:text="La description du projet"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/language"
+                    android:layout_margin="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="italic"
+                    android:text="Python"/>
+                <TextView
+                    android:id="@+id/date"
+                    android:layout_margin="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="14/04/1004"
+                    android:textStyle="italic"/>
+            </LinearLayout>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@color/colorPrimary"
+                android:textColor="@color/startwhite"
+                android:text="Browse"
+                android:layout_gravity="center_horizontal"/>
 
 
+
+        </LinearLayout>
+
+
+    </android.support.v7.widget.CardView>
 </LinearLayout>
