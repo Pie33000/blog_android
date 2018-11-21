@@ -2,6 +2,7 @@ package com.example.pierrickrugery.blog;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -107,7 +108,13 @@ public class HomeFragment extends ListFragment implements AdapterView.OnItemClic
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Toast.makeText(getContext(), "Item" + position, Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(getActivity().getBaseContext(), DetailsActivity.class);
+        ArrayList<String> data = new ArrayList<>();
+        data.add(titles.get(position));
+        data.add(description.get(position));
+        intent.putExtra("message", data);
+        startActivity(intent);
+        //Toast.makeText(getContext(), "Item" + position, Toast.LENGTH_SHORT).show();
     }
 
     class MyAdapter extends ArrayAdapter<String> {

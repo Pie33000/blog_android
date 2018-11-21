@@ -14,19 +14,17 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 
 import org.json.JSONObject;
 
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
-import javax.net.ssl.HttpsURLConnection;
 
 public class GithubFragment extends ListFragment implements AdapterView.OnItemClickListener {
+
+    private final String JSONURL = "https://api.github.com/users/pie33000/repos";
 
     String titles[] = {"AI in bank", "GITHUB in bio medicine"};
     String contents[] = {"Description item 1 ...", "Description item 2 ..."};
@@ -40,14 +38,34 @@ public class GithubFragment extends ListFragment implements AdapterView.OnItemCl
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.github_fragment, null);
     }
+
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        String url = "https://api.github.com/users/pie33000/repos";
-        
         GitHubAdapter adapter = new GitHubAdapter(getContext(), titles, contents, dates, language);
+        jsonrequest();
         setListAdapter(adapter);
         getListView().setOnItemClickListener(this);
+    }
+
+    private void jsonrequest(){
+        String url = "http://my-json-feed";
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.GET, JSONURL, null, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("click", "Pierrick Response: " + response.toString());
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("click", "Pierrick2 Response: " + error.toString());
+                    }
+                });
     }
 
     @Override
