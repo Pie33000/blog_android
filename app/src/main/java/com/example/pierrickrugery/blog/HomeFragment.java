@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,12 +16,26 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+
 
 public class HomeFragment extends ListFragment implements AdapterView.OnItemClickListener {
 
-    String titles[] = {"AI in bank", "AI in bio medicine", "Apple la meilleure marque", "Test", "Test", "Test", "Test"};
-    String description[] = {"Description item 1 ...", "Description item 2 ...", "Description item 3 ...", "Description item 3 ...", "Description item 3 ...", "Description item 3 ...", "Description item 3 ..."};
-    int imgs[] = {R.drawable.ic_date_range_black_24dp, R.drawable.ic_date_range_black_24dp, R.drawable.ic_date_range_black_24dp, R.drawable.ic_date_range_black_24dp, R.drawable.ic_date_range_black_24dp, R.drawable.ic_date_range_black_24dp, R.drawable.ic_date_range_black_24dp};
+    DatabaseReference mDatabase;
+    FirebaseDatabase database;
+
+    ArrayList<String> titles = new ArrayList<>();
+    ArrayList<String> description = new ArrayList<>();
+    ArrayList<Integer> imgs = new ArrayList<>(Arrays.asList(R.drawable.ic_date_range_black_24dp, R.drawable.ic_date_range_black_24dp));
+
 
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -32,7 +47,60 @@ public class HomeFragment extends ListFragment implements AdapterView.OnItemClic
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        MyAdapter adapter = new MyAdapter(getContext(), titles, description, imgs);
+        final MyAdapter adapter = new MyAdapter(getContext(), titles, description, imgs);
+        database = FirebaseDatabase.getInstance();
+        mDatabase = database.getReference("articles");
+        mDatabase.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                try {
+                    titles.add(dataSnapshot.child("title").getValue().toString());
+                    description.add(dataSnapshot.child("content").getValue().toString());
+                    imgs.add(R.drawable.ic_date_range_black_24dp);
+                    MyAdapter adapter = new MyAdapter(getContext(), titles, description, imgs);
+                    setListAdapter(adapter);
+                }
+                catch (Exception e){
+                    Log.d("Error", "onChildAdded Error: " + e.getMessage());
+                }
+
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+                Log.d("children", "onChildRemoved: " + dataSnapshot.getValue());
+                try{
+                    if (titles.contains(dataSnapshot.child("title").getValue().toString())) {
+                        int index = titles.indexOf(dataSnapshot.child("title").getValue().toString());
+                        titles.remove(index);
+                        description.remove(index);
+                        imgs.remove(index);
+                        MyAdapter adapter = new MyAdapter(getContext(), titles, description, imgs);
+                        setListAdapter(adapter);
+                    }
+                }
+                catch (Exception e){
+                    Log.d("Error", "onChildRemoved Error: " + e.getMessage());
+                }
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
         setListAdapter(adapter);
         getListView().setOnItemClickListener(this);
     }
@@ -44,11 +112,11 @@ public class HomeFragment extends ListFragment implements AdapterView.OnItemClic
 
     class MyAdapter extends ArrayAdapter<String> {
         Context context;
-        String myTitle[];
-        String myDescription[];
-        int[] images;
+        ArrayList<String> myTitle;
+        ArrayList<String> myDescription;
+        ArrayList<Integer> images;
 
-        MyAdapter(Context c, String[] titles, String[] description, int[] imgs) {
+        MyAdapter(Context c, ArrayList<String> titles, ArrayList<String> description, ArrayList<Integer> imgs) {
             super(c, R.layout.row, R.id.title, titles);
             this.context = c;
             this.myTitle = titles;
@@ -61,12 +129,12 @@ public class HomeFragment extends ListFragment implements AdapterView.OnItemClic
         public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
             LayoutInflater layoutInflater = (LayoutInflater) context.getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View row = layoutInflater.inflate(R.layout.row, parent, false);
-            ImageView images = row.findViewById(R.id.logo);
+            //ImageView images = row.findViewById(R.id.logo);
             TextView myTitle = row.findViewById(R.id.title);
             TextView date = row.findViewById(R.id.date);
-            images.setImageResource(imgs[position]);
-            myTitle.setText(titles[position]);
-            date.setText(description[position]);
+            //images.setImageResource(imgs.get(position));
+            myTitle.setText(titles.get(position));
+            date.setText(description.get(position));
             return super.getView(position, convertView, parent);
         }
 
