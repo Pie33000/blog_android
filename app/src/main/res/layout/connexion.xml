@@ -10,10 +10,13 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
         <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:layout_margin="20dp"
-            android:background="@color/black"/>
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="80dp"
+            android:layout_marginRight="80dp"
+            android:layout_gravity="center"
+            android:background="@drawable/blog"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -22,20 +25,28 @@
             android:textSize="23dp"
             android:layout_marginTop="20dp"
             android:layout_gravity="center"/>
+        <TextView
+            android:id="@+id/error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="@color/startred"
+            />
         <EditText
             android:layout_margin="20dp"
-            android:id="@+id/editText"
+            android:id="@+id/email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
-            android:text="Email" />
+            android:hint="Email" />
 
         <EditText
+            android:id="@+id/password"
             android:layout_margin="20dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword"
-            android:text="Password" />
+            android:hint="Password" />
 
         <CheckBox
             android:layout_gravity="center"
@@ -44,6 +55,7 @@
             android:text="Stay connected" />
 
         <Button
+            android:id="@+id/signIn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
@@ -53,6 +65,7 @@
             android:layout_gravity="center"
             android:background="@color/startblue"/>
         <Button
+            android:id="@+id/register"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"

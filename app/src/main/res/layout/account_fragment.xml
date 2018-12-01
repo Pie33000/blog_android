@@ -26,10 +26,11 @@
                     android:layout_height="wrap_content"
                     android:src="@drawable/profil_photo"/>
                 <TextView
+                    android:id="@+id/name"
                     android:layout_gravity="center_horizontal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Léa Pigeot"
+                    android:text="Unknown"
                     android:textColor="#fff"
                     android:textStyle="bold"
                     android:textSize="21sp"/>
@@ -119,10 +120,11 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_email_black_24dp"/>
             <TextView
+                android:id="@+id/email"
                 android:layout_marginTop="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="rugery.pierrick@gmail.com"
+                android:text="Unknown"
                 android:textStyle="italic"/>
         </LinearLayout>
         <View
@@ -145,10 +147,11 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_date_range_black_24dp"/>
             <TextView
+                android:id="@+id/birth"
                 android:layout_marginTop="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="14/04/1994"
+                android:text="Unknown"
                 android:textStyle="italic"/>
         </LinearLayout>
         <View
@@ -171,10 +174,11 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_phone_iphone_black_24dp"/>
             <TextView
+                android:id="@+id/phone"
                 android:layout_marginTop="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="+33 7 67 10 23 32"
+                android:text="Unknown"
                 android:textStyle="italic"/>
         </LinearLayout>
         <Button

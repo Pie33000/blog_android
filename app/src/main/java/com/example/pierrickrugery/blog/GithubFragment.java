@@ -1,10 +1,15 @@
 package com.example.pierrickrugery.blog;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ListFragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,24 +23,33 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
+import org.json.JSONException;
+
+import java.util.ArrayList;
 
 
 public class GithubFragment extends ListFragment implements AdapterView.OnItemClickListener {
 
-    private final String JSONURL = "https://api.github.com/users/pie33000/repos";
-
-    String titles[] = {"AI in bank", "GITHUB in bio medicine"};
-    String contents[] = {"Description item 1 ...", "Description item 2 ..."};
-    String dates[] = {"14/04/1994", "23/11/2019"};
-    String language[] = {"C", "Python"};
-
-
+    public static String data = "";
+    public LocalBroadcastManager manager;
+    private ArrayList<String> names;
+    private ArrayList<String> descriptions;
+    private ArrayList<String> languages;
+    private ArrayList<String> urls;
+    GithubFragment git = this;
+    private final Context c = getContext();
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        initBroadCastReceiver();
         return inflater.inflate(R.layout.github_fragment, null);
     }
 
@@ -43,51 +57,61 @@ public class GithubFragment extends ListFragment implements AdapterView.OnItemCl
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        GitHubAdapter adapter = new GitHubAdapter(getContext(), titles, contents, dates, language);
-        jsonrequest();
-        setListAdapter(adapter);
-        getListView().setOnItemClickListener(this);
+        FetchData process = new FetchData(manager);
+        process.execute();
     }
 
-    private void jsonrequest(){
-        String url = "http://my-json-feed";
 
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.GET, JSONURL, null, new Response.Listener<JSONObject>() {
-
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.d("click", "Pierrick Response: " + response.toString());
-                    }
-                }, new Response.ErrorListener() {
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d("click", "Pierrick2 Response: " + error.toString());
-                    }
-                });
-    }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Toast.makeText(getContext(), "Item" + position, Toast.LENGTH_SHORT).show();
     }
 
+    private void initBroadCastReceiver() {
+        manager = LocalBroadcastManager.getInstance(getContext());
+        MyBroadCastReceiver receiver = new MyBroadCastReceiver();
+        IntentFilter filter = new IntentFilter();
+        //whatever
+        filter.addAction("com.action.test");
+        manager.registerReceiver(receiver,filter);
+    }
+    class MyBroadCastReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            //e.g
+            names = intent.getStringArrayListExtra("names");
+            descriptions = intent.getStringArrayListExtra("descriptions");
+            languages = intent.getStringArrayListExtra("languages");
+            urls = intent.getStringArrayListExtra("urls");
+            if(getContext() != null){
+                GitHubAdapter adapter = new GitHubAdapter(getContext(), names, descriptions, languages, urls);
+                setListAdapter(adapter);
+                getListView().setOnItemClickListener(git);
+                adapter.notifyDataSetChanged();
+                names = null;
+                descriptions = null;
+                languages = null;
+                urls = null;
+            }
+            }
+    }
+
     class GitHubAdapter extends ArrayAdapter<String> {
         Context context;
-        String myTitle[];
-        String myContents[];
-        int[] images;
-        String[] myDates;
-        String[] myLanguage;
+        ArrayList<String> myName;
+        ArrayList<String> myDescription;
+        ArrayList<String> myLanguage;
+        ArrayList<String> myUrl;
 
-        GitHubAdapter(Context c, String[] titles, String[] contents, String[]dates, String[] language) {
-            super(c, R.layout.row2, R.id.title, titles);
+        GitHubAdapter(Context c, ArrayList<String> names, ArrayList<String> descriptions, ArrayList<String> languages, ArrayList<String> urls) {
+            super(c, R.layout.row2, R.id.title, names);
             this.context = c;
-            this.myTitle = titles;
-            this.myContents = contents;
-            this.myDates = dates;
-            this.myLanguage = language;
+            this.myName = names;
+            this.myDescription = descriptions;
+            this.myLanguage = languages;
+            this.myUrl = urls;
         }
 
         @NonNull
@@ -98,13 +122,14 @@ public class GithubFragment extends ListFragment implements AdapterView.OnItemCl
             TextView myTitle = row.findViewById(R.id.title);
             TextView myDate = row.findViewById(R.id.date);
             TextView myContent = row.findViewById(R.id.content);
-            TextView myLanguage = row.findViewById(R.id.language);
-            myTitle.setText(titles[position]);
-            myDate.setText(dates[position]);
-            myContent.setText(contents[position]);
-            myLanguage.setText(language[position]);
+            TextView myUrls = row.findViewById(R.id.language);
+            myTitle.setText(myName.get(position));
+            myDate.setText(myLanguage.get(position));
+            myContent.setText(myDescription.get(position));
+            myUrls.setText(myUrl.get(position));
             return super.getView(position, convertView, parent);
         }
 
     }
+
 }
